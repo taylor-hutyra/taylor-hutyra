@@ -8,7 +8,7 @@ Bulldoger is a swipe-to-pay platform. Donors see verified stories (a struggling 
 
 Every case passes a verification pipeline before any donor sees it: identity, bill documents, payoff confirmed with the creditor, a background/eligibility screen (gambling debts are never eligible), and a human caseworker review.
 
-> Status: **framework / prototype.** Auth, real KYC, and real money movement are stubbed behind interfaces with mock implementations. See [docs/ROADMAP.md](docs/ROADMAP.md) before handling real money.
+> Status: **framework / prototype. Everything is stubbed and mocked: no real payments, processors, identity checks, or logins.** Each one sits behind an interface with a mock implementation, shaped so real processors can be plugged in later without changing the app. See [docs/PAYMENTS.md](docs/PAYMENTS.md) for the secure payment flow and [docs/ROADMAP.md](docs/ROADMAP.md) before handling real money.
 
 ## Run it
 
@@ -35,7 +35,7 @@ bulldoger/
 │   └── src/  types.ts · eligibility.ts · providers.ts · engine.ts · seed.ts · engine.test.ts
 ├── server/   Express API wrapping the engine (auth stubbed)
 ├── web/      React + Vite mobile-first app: swipe deck, pledges, apply form, how-it-works
-└── docs/     ARCHITECTURE · VERIFICATION · ROADMAP
+└── docs/     ARCHITECTURE · PAYMENTS · VERIFICATION · ROADMAP
 ```
 
 The engine runs in both places: the server wraps it in HTTP, and the web app's **demo mode** runs it directly in the browser with fictional sample data. That's what the GitHub Pages deploy serves.
@@ -46,7 +46,7 @@ The engine runs in both places: the server wraps it in HTTP, and the web app's *
 2. **Verify**: automated checks run through `VerificationProvider`s; `story_review` always waits for a human.
 3. **List**: once every check passes, the case appears in donors' decks.
 4. **Swipe right**: creates a 48-hour hold (pledge). The donor confirms (must be KYC-verified).
-5. **Pay**: the `PaymentRail` re-quotes each payoff with the creditor and pays creditor-direct.
+5. **Pay** (all mocked): hold the donor's funds → verify each creditor's receiving account → re-quote payoffs → capture → pay creditor-direct. Any failure releases the hold and nobody is charged. Every step goes in an audit ledger.
 6. **Bulldozed**: when every creditor confirms (webhook), the case closes and the recipient is notified.
 
 ## API (server)

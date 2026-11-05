@@ -137,3 +137,10 @@ code { font-size: 0.85em; }
 .steps p { margin: 2px 0 0; color: var(--muted); font-size: 0.9rem; }
 .form h2 { margin: 0; }
 .form > p.muted { margin: 0; }
+.paying-from { display: flex; justify-content: space-between; gap: 10px; margin: 12px 0; padding: 10px 12px; border-radius: 12px; background: var(--bg); font-size: 0.88rem; }
+.paying-from span { color: var(--muted); }
+.trail { text-align: left; margin: 0 0 8px; font-size: 0.85rem; }
+.trail summary { cursor: pointer; font-weight: 600; }
+.trail ol { margin: 8px 0 0; padding-left: 20px; }
+.trail li { padding: 2px 0; }
+.trail small { color: var(--muted); }

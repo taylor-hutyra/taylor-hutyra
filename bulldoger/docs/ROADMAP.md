@@ -1,6 +1,12 @@
 # Roadmap & open questions
 
+## Now: everything stubbed
+
+All processors, identity checks and logins are mocks. The app is safe to demo: nothing real can be charged or paid.
+
 ## Before real money moves (must-do)
+
+- [ ] Replace `MockFundingProvider` and `MockPaymentRail` with real processors (see PAYMENTS.md): tokenized donor payments, verified creditor payees, signed webhooks, idempotency keys, daily ledger reconciliation.
 
 - [ ] **Legal structure.** Decide: (a) a 501(c)(3) nonprofit, so donations are tax-deductible and the org makes grants to pay creditors, or (b) a for-profit platform facilitating person-to-person gifts. (a) is usually simpler for donor trust and taxes. Talk to a nonprofit attorney.
 - [ ] **Money transmission.** Holding and forwarding funds can require state money-transmitter licenses. Using a licensed partner (or a nonprofit making grants from its own account) avoids most of this.

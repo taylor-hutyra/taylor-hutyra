@@ -15,6 +15,8 @@ export type ApplyResponse = { ok: true; id: string; status: string } | { ok: fal
 export interface Api {
   readonly mode: "live" | "demo";
   me(): Promise<Donor>;
+  /** Label for the donor's (stubbed) payment method. */
+  fundingSource(): Promise<string>;
   feed(): Promise<PublicCard[]>;
   swipe(caseId: string, direction: SwipeDirection): Promise<{ pledge?: Pledge }>;
   pledges(): Promise<PledgeWithCard[]>;
@@ -38,6 +40,7 @@ function demoApi(): Api {
   return {
     mode: "demo",
     me: () => wrap(() => engine.getDonor(DONOR_ID)),
+    fundingSource: () => wrap(() => engine.fundingSourceLabel(DONOR_ID)),
     feed: () => wrap(() => engine.feed(DONOR_ID)),
     swipe: (id, dir) => wrap(() => engine.swipe(DONOR_ID, id, dir)),
     pledges: () => wrap(() => engine.pledgesFor(DONOR_ID)),
@@ -69,6 +72,7 @@ function liveApi(base: string): Api {
   return {
     mode: "live",
     me: () => call("/api/me"),
+    fundingSource: () => call<{ label: string }>("/api/me/funding-source").then((r) => r.label),
     feed: () => call("/api/feed"),
     swipe: (caseId, direction) => call("/api/swipes", { method: "POST", body: JSON.stringify({ caseId, direction }) }),
     pledges: () => call("/api/pledges"),

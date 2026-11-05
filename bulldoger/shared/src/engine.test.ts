@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createDemoEngine } from "./index.ts";
+import { createDemoEngine, MockFundingProvider, MockPaymentRail } from "./index.ts";
 import type { ApplicationInput } from "./types.ts";
 
 const goodApp: ApplicationInput = {
@@ -93,5 +93,49 @@ describe("swipe → pledge → creditor-direct payment", () => {
     const e = createDemoEngine();
     const json = JSON.stringify(e.feed("donor_demo"));
     expect(json).not.toMatch(/accountMask|••••/);
+  });
+
+  it("records the secure money flow in order: hold → verify payees → capture → pay", async () => {
+    const e = createDemoEngine();
+    const { pledge } = e.swipe("donor_demo", "case_denise", "right");
+    const p = await e.confirmPledge(pledge!.id, "donor_demo");
+    e.settleAll(p.id);
+    expect(p.ledger.map((l) => l.event)).toEqual([
+      "funds_authorized",
+      "payee_verified",
+      "payoff_quoted",
+      "payee_verified",
+      "payoff_quoted",
+      "funds_captured",
+      "disbursement_sent",
+      "disbursement_sent",
+      "creditor_confirmed",
+      "creditor_confirmed",
+    ]);
+    expect(p.disbursements.every((d) => d.payeeId.startsWith("mock_payee_"))).toBe(true);
+  });
+});
+
+describe("payment safety rails (stubbed vendors)", () => {
+  it("declined donor payment: nothing charged, case stays in the deck", async () => {
+    const e = createDemoEngine({ funding: new MockFundingProvider({ declineOverCents: 1000_00 }) });
+    const { pledge } = e.swipe("donor_demo", "case_maya", "right");
+    await expect(e.confirmPledge(pledge!.id, "donor_demo")).rejects.toThrow(/declined/);
+    expect(e.getCase("case_maya").status).toBe("listed");
+    expect(e.pledgesFor("donor_demo")[0]!.ledger.map((l) => l.event)).toEqual(["funds_declined"]);
+  });
+
+  it("unverifiable creditor: hold released, no payments sent, case stays listed", async () => {
+    const funding = new MockFundingProvider();
+    const e = createDemoEngine({ funding, rail: new MockPaymentRail({ rejectPayees: ["Little Sprouts Learning Center"] }) });
+    const { pledge } = e.swipe("donor_demo", "case_denise", "right");
+    await expect(e.confirmPledge(pledge!.id, "donor_demo")).rejects.toThrow(/not charged/);
+    const p = e.pledgesFor("donor_demo")[0]!;
+    expect(p.status).toBe("cancelled");
+    expect(p.disbursements).toHaveLength(0);
+    expect(p.ledger.map((l) => l.event)).not.toContain("funds_captured");
+    expect(p.ledger.at(-1)!.event).toBe("funds_released");
+    expect(funding.voided.has(p.fundingAuthorizationId!)).toBe(true);
+    expect(e.getCase("case_denise").status).toBe("listed");
   });
 });

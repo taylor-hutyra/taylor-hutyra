@@ -1,5 +1,5 @@
 import { screenApplication } from "./eligibility.ts";
-import type { PaymentRail, VerificationProvider } from "./providers.ts";
+import type { FundingProvider, PaymentRail, VerificationProvider } from "./providers.ts";
 import type {
   ApplicationInput,
   Case,
@@ -7,6 +7,7 @@ import type {
   CheckKind,
   CheckStatus,
   Donor,
+  LedgerEntry,
   Pledge,
   PublicCard,
   Swipe,
@@ -40,6 +41,7 @@ export class EngineError extends Error {
 export interface EngineOptions {
   verifiers: VerificationProvider[];
   rail: PaymentRail;
+  funding: FundingProvider;
   now?: () => Date;
   newId?: (prefix: string) => string;
 }
@@ -110,6 +112,7 @@ export class BulldogerEngine {
       amountCents: totalOf(c),
       status: "awaiting_confirmation",
       disbursements: [],
+      ledger: [],
       createdAt: this.iso(),
       expiresAt: new Date(this.now().getTime() + PLEDGE_HOLD_MS).toISOString(),
     };
@@ -144,37 +147,84 @@ export class BulldogerEngine {
       throw new EngineError("conflict", "Another donor already bulldozed this one. 🐶");
     }
 
-    // Lock the case, then cancel any other donors' open holds on it.
+    // Lock the case while we line up the money.
     c.status = "pledged";
+    const { funding, rail } = this.opts;
+    const log = (entry: Omit<LedgerEntry, "at">) => p.ledger.push({ at: this.iso(), ...entry });
+    const abort = async (authId: string | undefined, reason: string): Promise<never> => {
+      if (authId) {
+        await funding.void(authId);
+        log({ event: "funds_released", ref: authId, note: reason });
+      }
+      c.status = "listed"; // back in the deck; nobody was charged
+      p.status = "cancelled";
+      throw new EngineError("conflict", reason);
+    };
+
+    // 1. Hold the donor's funds (not charged yet).
+    const auth = await funding.authorize(donorId, p.amountCents);
+    if (auth.status === "declined") {
+      log({ event: "funds_declined", amountCents: p.amountCents, note: auth.reason });
+      c.status = "listed";
+      throw new EngineError("invalid", `Payment method declined: ${auth.reason}`);
+    }
+    p.fundingAuthorizationId = auth.authorizationId;
+    log({ event: "funds_authorized", amountCents: p.amountCents, ref: auth.authorizationId });
+
+    // 2. Verify every creditor's receiving account and get a fresh payoff quote.
+    const plan: Array<{ debt: (typeof c.debts)[number]; payeeId: string; amountCents: number }> = [];
+    for (const debt of c.debts) {
+      const payee = await rail.verifyPayee(debt);
+      if (!payee.verified) {
+        log({ event: "payee_rejected", debtId: debt.id, note: payee.reason });
+        return abort(auth.authorizationId, `${payee.reason} You were not charged.`);
+      }
+      log({ event: "payee_verified", debtId: debt.id, ref: payee.payeeId });
+      const quote = await rail.quotePayoff(debt);
+      log({ event: "payoff_quoted", debtId: debt.id, amountCents: quote.amountCents });
+      plan.push({ debt, payeeId: payee.payeeId, amountCents: quote.amountCents });
+    }
+    const total = plan.reduce((s, x) => s + x.amountCents, 0);
+    if (total > p.amountCents) {
+      return abort(auth.authorizationId, "A balance went up since this case was verified. You were not charged.");
+    }
+
+    // 3. Everything checks out: capture the funds and cancel other donors' holds.
+    const { captureId } = await funding.capture(auth.authorizationId, total);
+    log({ event: "funds_captured", amountCents: total, ref: captureId });
     for (const other of this.pledges.values()) {
       if (other.caseId === c.id && other.id !== p.id && other.status === "awaiting_confirmation") {
         other.status = "cancelled";
       }
     }
-    p.status = "confirmed";
-    p.messageToRecipient = message?.slice(0, 500);
-
-    // Re-quote every balance with the creditor, then pay creditor-direct.
     p.status = "disbursing";
+    p.amountCents = total;
+    p.messageToRecipient = message?.slice(0, 500);
     c.status = "paying";
-    let total = 0;
-    for (const debt of c.debts) {
-      const quote = await this.opts.rail.quotePayoff(debt);
-      const res = await this.opts.rail.pay(debt, quote.amountCents);
-      total += quote.amountCents;
+
+    // 4. Pay each creditor directly.
+    for (const { debt, payeeId, amountCents } of plan) {
+      const res = await rail.pay(payeeId, debt, amountCents);
+      log({ event: "disbursement_sent", debtId: debt.id, amountCents, ref: res.externalRef });
       p.disbursements.push({
         id: this.newId("dsb"),
         debtId: debt.id,
         creditorName: debt.creditorName,
-        amountCents: quote.amountCents,
+        amountCents,
         status: res.status,
-        rail: this.opts.rail.name,
+        rail: rail.name,
+        payeeId,
         externalRef: res.externalRef,
         updatedAt: this.iso(),
       });
     }
-    p.amountCents = total;
     return p;
+  }
+
+  /** Label for the donor's funding source (stubbed card in demo). */
+  fundingSourceLabel(donorId: string): Promise<string> {
+    this.getDonor(donorId);
+    return this.opts.funding.describeSource(donorId);
   }
 
   /** Called from the payment rail webhook when a creditor posts the payment. */
@@ -182,8 +232,10 @@ export class BulldogerEngine {
     const p = this.getPledge(pledgeId);
     const d = p.disbursements.find((x) => x.id === disbursementId);
     if (!d) throw new EngineError("not_found", "Disbursement not found");
+    if (d.status === "confirmed_by_creditor") return p;
     d.status = "confirmed_by_creditor";
     d.updatedAt = this.iso();
+    p.ledger.push({ at: this.iso(), event: "creditor_confirmed", debtId: d.debtId, amountCents: d.amountCents, ref: d.externalRef });
     if (p.disbursements.every((x) => x.status === "confirmed_by_creditor")) {
       p.status = "completed";
       this.getCase(p.caseId).status = "bulldozed";

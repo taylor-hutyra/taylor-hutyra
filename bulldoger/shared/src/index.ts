@@ -5,14 +5,19 @@ export * from "./engine.ts";
 export * from "./seed.ts";
 
 import { BulldogerEngine } from "./engine.ts";
-import { MockPaymentRail, MockVerificationProvider } from "./providers.ts";
+import { MockFundingProvider, MockPaymentRail, MockVerificationProvider, type FundingProvider, type PaymentRail } from "./providers.ts";
 import { SEED_CASES, SEED_DONORS } from "./seed.ts";
 
-/** An engine wired to mock vendors and loaded with fictional sample data. */
-export function createDemoEngine(): BulldogerEngine {
+/**
+ * An engine wired entirely to MOCK vendors and loaded with fictional sample
+ * data. No real verification, no real money. Pass overrides to simulate
+ * failures in tests.
+ */
+export function createDemoEngine(overrides: { funding?: FundingProvider; rail?: PaymentRail } = {}): BulldogerEngine {
   const engine = new BulldogerEngine({
     verifiers: [new MockVerificationProvider()],
-    rail: new MockPaymentRail(),
+    rail: overrides.rail ?? new MockPaymentRail(),
+    funding: overrides.funding ?? new MockFundingProvider(),
   });
   engine.load({ cases: SEED_CASES, donors: SEED_DONORS });
   return engine;

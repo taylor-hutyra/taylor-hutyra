@@ -5,6 +5,9 @@ import { createDemoEngine, EngineError, type CheckKind, type CheckStatus } from 
 /**
  * Bulldoger API. Thin HTTP layer over the shared engine.
  *
+ * ALL VENDORS ARE MOCKED (verification, donor funding, creditor payments):
+ * no real money moves. See docs/PAYMENTS.md.
+ *
  * AUTH IS STUBBED: the donor is identified by an `x-donor-id` header and
  * caseworker routes by an `x-admin-key` header. Replace both with real
  * auth (e.g. Clerk/Auth0/Supabase) before anything touches real money.
@@ -34,6 +37,10 @@ app.get("/api/health", (_req, res) => {
 
 app.get("/api/me", (req, res) => {
   res.json(engine.getDonor(donorId(req)));
+});
+
+app.get("/api/me/funding-source", async (req, res) => {
+  res.json({ label: await engine.fundingSourceLabel(donorId(req)) });
 });
 
 app.get("/api/feed", (req, res) => {

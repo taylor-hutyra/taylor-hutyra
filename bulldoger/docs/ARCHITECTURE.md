@@ -10,6 +10,7 @@
 ┌─────────────────────────────────────────────┐
 │ shared: BulldogerEngine (all business rules)│
 │  ├─ VerificationProvider[]  (KYC, docs, …)  │
+│  ├─ FundingProvider         (donor money in) │
 │  └─ PaymentRail             (creditor-direct)│
 └─────────────────────────────────────────────┘
 ```
@@ -46,6 +47,7 @@ First donor to *confirm* wins. Other donors' open holds on the same case are can
 | Storage | in-memory `Map`s in the engine | Postgres (Supabase/Neon) behind a repository interface |
 | Auth | `x-donor-id` / `x-admin-key` headers | Clerk, Auth0, or Supabase Auth; caseworker role |
 | Verification | `MockVerificationProvider` | see VERIFICATION.md |
-| Payments | `MockPaymentRail` | Method Financial (pays loans/cards directly), Stripe for donor funding, check/ACH for landlords & clinics |
+| Donor funding | `MockFundingProvider` | Stripe / Plaid ACH / wire (see PAYMENTS.md) |
+| Creditor payments | `MockPaymentRail` | Method Financial (pays loans/cards directly), check/ACH for landlords & clinics |
 | Photos | initials avatars | object storage + moderation; recipients approve their photo |
 | Mobile | responsive web app (installable) | wrap with Capacitor or port to React Native/Expo |

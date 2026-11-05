@@ -153,8 +153,21 @@ export function SwipeDeck({ onBulldozed }: { onBulldozed: () => void }) {
   );
 }
 
+const LEDGER_LABELS: Record<string, string> = {
+  funds_authorized: "Funds held on your payment method",
+  payee_verified: "Creditor account verified",
+  payoff_quoted: "Payoff amount re-confirmed",
+  funds_captured: "Your payment captured",
+  disbursement_sent: "Sent to creditor",
+  creditor_confirmed: "Creditor confirmed receipt",
+};
+
 function PledgeSheet({ sheet, onConfirm, onClose }: { sheet: Sheet; onConfirm: (msg: string) => void; onClose: () => void }) {
   const [message, setMessage] = useState("");
+  const [source, setSource] = useState<string>("");
+  useEffect(() => {
+    void api.fundingSource().then(setSource);
+  }, []);
   const { card, pledge } = sheet;
   return (
     <div className="sheet-backdrop" role="dialog" aria-modal="true" aria-label="Confirm payment">
@@ -178,6 +191,9 @@ function PledgeSheet({ sheet, onConfirm, onClose }: { sheet: Sheet; onConfirm: (
                 <b>{formatUSD(pledge.amountCents)}</b>
               </li>
             </ul>
+            <p className="paying-from">
+              <span>Paying from</span> <b>{source || "…"}</b>
+            </p>
             <label className="field">
               Note to {card.firstName} (optional)
               <textarea value={message} onChange={(e) => setMessage(e.target.value)} maxLength={500} rows={2} placeholder="Rooting for you." />
@@ -223,6 +239,19 @@ function PledgeSheet({ sheet, onConfirm, onClose }: { sheet: Sheet; onConfirm: (
                 </li>
               ))}
             </ul>
+            <details className="trail">
+              <summary>Payment trail ({pledge.ledger.length} steps)</summary>
+              <ol>
+                {pledge.ledger.map((l, i) => (
+                  <li key={i}>
+                    {LEDGER_LABELS[l.event] ?? l.event}
+                    {l.amountCents ? ` · ${formatUSD(l.amountCents)}` : ""}
+                    {l.ref ? <small> {l.ref}</small> : null}
+                  </li>
+                ))}
+              </ol>
+            </details>
+            <p className="fine">Demo: every processor is mocked. No real money moved.</p>
             <button className="btn primary" onClick={onClose}>
               Keep swiping
             </button>

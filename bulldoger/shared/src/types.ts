@@ -134,6 +134,8 @@ export interface Disbursement {
   amountCents: Cents;
   status: DisbursementStatus;
   rail: string; // "mock", "method-fi", "stripe-treasury", "check"...
+  /** Verified payee record at the rail: proves the money is going to the real creditor account. */
+  payeeId: string;
   externalRef?: string;
   updatedAt: string;
 }
@@ -147,6 +149,10 @@ export interface Pledge {
   disbursements: Disbursement[];
   /** Optional note the recipient will see. */
   messageToRecipient?: string;
+  /** Hold on the donor's funding source (card/ACH/wire). Captured only once every payee checks out. */
+  fundingAuthorizationId?: string;
+  /** Append-only audit trail of every money movement for this pledge. */
+  ledger: LedgerEntry[];
   createdAt: string;
   expiresAt: string;
 }
@@ -181,4 +187,25 @@ export interface ApplicationInput {
   photoUrl?: string;
   debts: Array<Pick<Debt, "type" | "creditorName" | "accountMask" | "amountCents">>;
   consentToShare: boolean;
+}
+
+export type LedgerEvent =
+  | "funds_authorized" // donor's funds put on hold
+  | "funds_declined"
+  | "payee_verified" // creditor's receiving account confirmed
+  | "payee_rejected"
+  | "payoff_quoted" // fresh payoff amount from the creditor
+  | "funds_captured" // donor actually charged
+  | "funds_released" // hold voided, donor not charged
+  | "disbursement_sent" // money sent to creditor
+  | "creditor_confirmed"; // creditor posted the payment to the account
+
+export interface LedgerEntry {
+  at: string;
+  event: LedgerEvent;
+  amountCents?: Cents;
+  /** Provider reference (authorization id, payee id, transaction id...). */
+  ref?: string;
+  debtId?: string;
+  note?: string;
 }
