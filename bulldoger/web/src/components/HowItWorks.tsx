@@ -4,14 +4,14 @@ const STEPS = [
   { icon: "📄", title: "Bills verified", body: "Statements are reviewed and each payoff amount is confirmed directly with the creditor." },
   { icon: "🔎", title: "Background screen", body: "Screened for gambling, fraud and repeat requests. Gambling debts are never eligible." },
   { icon: "🧑‍⚖️", title: "Caseworker review", body: "A human reads every story before it goes live. No exceptions." },
-  { icon: "👉", title: "You swipe right", body: "You see the story, the bills, and the total. Confirm to bulldoge." },
+  { icon: "👉", title: "You swipe right", body: "You see the story, the bills, and the total. Confirm to bullDOGE." },
   { icon: "🏦", title: "Creditor-direct", body: "Money goes straight to the landlord, hospital, or school. Never cash in hand." },
 ];
 
 export function HowItWorks() {
   return (
     <section className="panel">
-      <h2>How Bulldoger keeps it real</h2>
+      <h2>How BullDOGEr keeps it real</h2>
       <ol className="steps">
         {STEPS.map((s) => (
           <li key={s.title}>

@@ -1,5 +1,5 @@
 /**
- * Core domain model for Bulldoger.
+ * Core domain model for BullDOGEr.
  *
  * Key principles baked into the model:
  *  1. Money never goes to the recipient as cash. Every dollar is paid

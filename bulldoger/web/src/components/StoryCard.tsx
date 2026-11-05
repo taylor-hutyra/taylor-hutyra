@@ -38,7 +38,7 @@ export function StoryCard({ card }: { card: PublicCard }) {
         </div>
         <div className="story-total">
           <span>{formatUSD(card.totalCents)}</span>
-          <small>to bulldoge</small>
+          <small>to bullDOGE</small>
         </div>
       </div>
       <div className="story-body">

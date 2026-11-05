@@ -3,7 +3,7 @@ import express, { type NextFunction, type Request, type Response } from "express
 import { createDemoEngine, EngineError, type CheckKind, type CheckStatus } from "@bulldoger/shared";
 
 /**
- * Bulldoger API. Thin HTTP layer over the shared engine.
+ * BullDOGEr API. Thin HTTP layer over the shared engine.
  *
  * ALL VENDORS ARE MOCKED (verification, donor funding, creditor payments):
  * no real money moves. See docs/PAYMENTS.md.
@@ -118,5 +118,5 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🐶🚜 Bulldoger API listening on http://localhost:${PORT}`);
+  console.log(`🐶🚜 BullDOGEr API listening on http://localhost:${PORT}`);
 });

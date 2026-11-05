@@ -1,10 +1,10 @@
-<p align="center"><img src="web/public/logo.svg" width="160" alt="Bulldoger logo: a bulldozer with a corgi's head on the front"></p>
+<p align="center"><img src="web/public/logo.svg" width="160" alt="BullDOGEr logo: a bulldozer with a corgi's head on the front"></p>
 
-# Bulldoger
+# BullDOGEr
 
-**Swipe right. Bulldoge a bill.**
+**Swipe right. BullDOGE a bill.**
 
-Bulldoger is a swipe-to-pay platform. Donors see verified stories (a struggling college student, a single parent, someone climbing out of homelessness), each with a photo and the specific bills holding them back. Swipe left to pass. Swipe right and confirm, and the platform pays those bills **directly to the creditor** (landlord, hospital, school), never as cash.
+BullDOGEr is a swipe-to-pay platform. Donors see verified stories (a struggling college student, a single parent, someone climbing out of homelessness), each with a photo and the specific bills holding them back. Swipe left to pass. Swipe right and confirm, and the platform pays those bills **directly to the creditor** (landlord, hospital, school), never as cash.
 
 Every case passes a verification pipeline before any donor sees it: identity, bill documents, payoff confirmed with the creditor, a background/eligibility screen (gambling debts are never eligible), and a human caseworker review.
 
@@ -47,7 +47,7 @@ The engine runs in both places: the server wraps it in HTTP, and the web app's *
 3. **List**: once every check passes, the case appears in donors' decks.
 4. **Swipe right**: creates a 48-hour hold (pledge). The donor confirms (must be KYC-verified).
 5. **Pay** (all mocked): hold the donor's funds → verify each creditor's receiving account → re-quote payoffs → capture → pay creditor-direct. Any failure releases the hold and nobody is charged. Every step goes in an audit ledger.
-6. **Bulldoged**: when every creditor confirms (webhook), the case closes and the recipient is notified.
+6. **BullDOGEd**: when every creditor confirms (webhook), the case closes and the recipient is notified.
 
 ## API (server)
 

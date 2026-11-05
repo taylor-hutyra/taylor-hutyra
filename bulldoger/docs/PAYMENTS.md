@@ -24,11 +24,11 @@ When a donor confirms a right swipe, `BulldogerEngine.confirmPledge` runs:
 
 If anything fails in steps 1–4, the hold is **voided**, the donor is **not charged**, and the case goes back in the deck. Tests in `shared/src/engine.test.ts` cover the declined card, the unverifiable creditor, and the order of steps.
 
-Every step is written to the pledge's append-only **ledger** (`Pledge.ledger`) with the provider's reference IDs: a full audit trail for donors, recipients, and reconciliation. The app shows it as the "Payment trail" after a bulldoge.
+Every step is written to the pledge's append-only **ledger** (`Pledge.ledger`) with the provider's reference IDs: a full audit trail for donors, recipients, and reconciliation. The app shows it as the "Payment trail" after a bullDOGE.
 
 ## Security principles for when it's real
 
-- **Never store card or bank numbers.** Processors tokenize them; Bulldoger stores only tokens and display labels.
+- **Never store card or bank numbers.** Processors tokenize them; BullDOGEr stores only tokens and display labels.
 - **Never pay the recipient.** Payees are creditors only, verified before each payment.
 - **Authorize → verify → capture.** The donor is charged only after every payee checks out.
 - **Webhooks must be signed.** Verify the processor's signature before trusting any confirmation (the current endpoint is behind a stub admin key).

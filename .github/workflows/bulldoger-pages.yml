@@ -1,6 +1,6 @@
-# Deploys the Bulldoger web demo (in-browser demo mode, fictional data) to GitHub Pages.
+# Deploys the BullDOGEr web demo (in-browser demo mode, fictional data) to GitHub Pages.
 # One-time setup: repo Settings → Pages → Source: "GitHub Actions".
-name: Deploy Bulldoger demo
+name: Deploy BullDOGEr demo
 
 on:
   push:

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="t">
-  <title id="t">Bulldoger: a bulldozer with a corgi's head on the front</title>
+  <title id="t">BullDOGEr: a bulldozer with a corgi's head on the front</title>
   <!-- exhaust stack -->
   <rect x="58" y="62" width="10" height="34" rx="3" fill="#3a3a3a"/>
   <circle cx="58" cy="52" r="6" fill="#d9d9d9" opacity=".7"/>

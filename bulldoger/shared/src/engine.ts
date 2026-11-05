@@ -49,7 +49,7 @@ export interface EngineOptions {
 export type ApplyResult = { ok: true; case: Case } | { ok: false; reasons: string[] };
 
 /**
- * The Bulldoger engine: all business rules live here, with no HTTP or
+ * The BullDOGEr engine: all business rules live here, with no HTTP or
  * storage concerns. The server wraps it in an API; the web app's demo mode
  * runs it directly in the browser. Storage is in-memory for now; swap the
  * Maps for a repository interface when you add a database.
@@ -129,7 +129,7 @@ export class BulldogerEngine {
   }
 
   /**
-   * Donor confirms a pledge. v1 is "bulldoge it all": the donor covers the
+   * Donor confirms a pledge. v1 is "bullDOGE it all": the donor covers the
    * full verified balance, and every debt is paid directly to its creditor.
    */
   async confirmPledge(pledgeId: string, donorId: string, message?: string): Promise<Pledge> {
@@ -144,7 +144,7 @@ export class BulldogerEngine {
     const c = this.getCase(p.caseId);
     if (c.status !== "listed") {
       p.status = "cancelled";
-      throw new EngineError("conflict", "Another donor already bulldoged this one. 🐶");
+      throw new EngineError("conflict", "Another donor already bullDOGEd this one. 🐶");
     }
 
     // Lock the case while we line up the money.

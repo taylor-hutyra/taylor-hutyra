@@ -7,7 +7,7 @@ import { SwipeDeck } from "./components/SwipeDeck.tsx";
 
 const TABS = [
   { id: "swipe", label: "Swipe", icon: "👆" },
-  { id: "bulldoged", label: "My bulldoges", icon: "🐶" },
+  { id: "bulldoged", label: "My bullDOGEs", icon: "🐶" },
   { id: "apply", label: "Get help", icon: "📝" },
   { id: "how", label: "How it works", icon: "🛡️" },
 ] as const;
@@ -33,8 +33,8 @@ export function App() {
       <header className="topbar">
         <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" className="topbar-logo" />
         <div>
-          <h1>Bulldoger</h1>
-          <p className="tagline">Swipe right. Bulldoge a bill.</p>
+          <h1>BullDOGEr</h1>
+          <p className="tagline">Swipe right. BullDOGE a bill.</p>
         </div>
         {api.mode === "demo" && <span className="pill" title="Running in-browser with fictional sample data">Demo</span>}
       </header>

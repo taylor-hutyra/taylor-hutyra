@@ -142,7 +142,7 @@ export function SwipeDeck({ onBulldoged }: { onBulldoged: () => void }) {
           <button className="btn-round pass" onClick={() => void commit("left")} aria-label={`Pass on ${top.firstName}`}>
             ✕
           </button>
-          <button className="btn-round bulldoge" onClick={() => void commit("right")} aria-label={`Bulldoge ${top.firstName}'s bills`}>
+          <button className="btn-round bulldoge" onClick={() => void commit("right")} aria-label={`BullDOGE ${top.firstName}'s bills`}>
             <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" width={54} height={54} />
           </button>
         </div>
@@ -174,7 +174,7 @@ function PledgeSheet({ sheet, onConfirm, onClose }: { sheet: Sheet; onConfirm: (
       <div className="sheet">
         {sheet.kind === "confirm" && (
           <>
-            <h2>Bulldoge {card.firstName}'s bills?</h2>
+            <h2>BullDOGE {card.firstName}'s bills?</h2>
             <p className="muted">
               Your money goes <strong>straight to the creditors</strong> below, never as cash. {card.firstName} gets a
               notification when each one is paid.
@@ -215,7 +215,7 @@ function PledgeSheet({ sheet, onConfirm, onClose }: { sheet: Sheet; onConfirm: (
         {sheet.kind === "paying" && (
           <div className="center">
             <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" width={120} className="rumble" />
-            <h2>Bulldoging…</h2>
+            <h2>BullDOGing…</h2>
             <p className="muted">Sending {pledge.disbursements.length} payment(s) directly to creditors.</p>
           </div>
         )}
@@ -224,7 +224,7 @@ function PledgeSheet({ sheet, onConfirm, onClose }: { sheet: Sheet; onConfirm: (
             <div className="confetti" aria-hidden>
               🎉
             </div>
-            <h2>Bulldoged!</h2>
+            <h2>BullDOGEd!</h2>
             <p>
               {formatUSD(pledge.amountCents)} of {card.firstName}'s bills are paid off.
             </p>
