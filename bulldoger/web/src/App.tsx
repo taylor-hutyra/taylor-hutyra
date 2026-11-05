@@ -7,7 +7,7 @@ import { SwipeDeck } from "./components/SwipeDeck.tsx";
 
 const TABS = [
   { id: "swipe", label: "Swipe", icon: "👆" },
-  { id: "bulldozed", label: "My bulldozes", icon: "🐶" },
+  { id: "bulldoged", label: "My bulldoges", icon: "🐶" },
   { id: "apply", label: "Get help", icon: "📝" },
   { id: "how", label: "How it works", icon: "🛡️" },
 ] as const;
@@ -34,14 +34,14 @@ export function App() {
         <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" className="topbar-logo" />
         <div>
           <h1>Bulldoger</h1>
-          <p className="tagline">Swipe right. Bulldoze a bill.</p>
+          <p className="tagline">Swipe right. Bulldoge a bill.</p>
         </div>
         {api.mode === "demo" && <span className="pill" title="Running in-browser with fictional sample data">Demo</span>}
       </header>
 
       <main className="content">
-        {tab === "swipe" && <SwipeDeck onBulldozed={() => setRefreshKey((k) => k + 1)} />}
-        {tab === "bulldozed" && <Pledges key={refreshKey} />}
+        {tab === "swipe" && <SwipeDeck onBulldoged={() => setRefreshKey((k) => k + 1)} />}
+        {tab === "bulldoged" && <Pledges key={refreshKey} />}
         {tab === "apply" && <ApplyForm />}
         {tab === "how" && <HowItWorks />}
       </main>

@@ -73,7 +73,7 @@ export type CaseStatus =
   | "listed" // verified + visible in the swipe deck
   | "pledged" // a donor swiped right and confirmed
   | "paying" // disbursements to creditors in flight
-  | "bulldozed" // all debts paid. 🎉
+  | "bulldoged" // all debts paid. 🎉
   | "rejected"
   | "withdrawn";
 

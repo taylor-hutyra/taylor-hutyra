@@ -20,11 +20,11 @@ When a donor confirms a right swipe, `BulldogerEngine.confirmPledge` runs:
 3. **Re-quote.** Get a fresh payoff amount straight from the creditor.
 4. **Capture.** Only if every payee verified and the total didn't go up do we actually charge the donor.
 5. **Pay creditor-direct.** One disbursement per bill, to the verified payee. Never cash to the recipient.
-6. **Confirm.** The rail's webhook reports each creditor posting the payment (`/api/webhooks/rail/...`). When all are confirmed, the case is "bulldozed".
+6. **Confirm.** The rail's webhook reports each creditor posting the payment (`/api/webhooks/rail/...`). When all are confirmed, the case is "bulldoged".
 
 If anything fails in steps 1–4, the hold is **voided**, the donor is **not charged**, and the case goes back in the deck. Tests in `shared/src/engine.test.ts` cover the declined card, the unverifiable creditor, and the order of steps.
 
-Every step is written to the pledge's append-only **ledger** (`Pledge.ledger`) with the provider's reference IDs: a full audit trail for donors, recipients, and reconciliation. The app shows it as the "Payment trail" after a bulldoze.
+Every step is written to the pledge's append-only **ledger** (`Pledge.ledger`) with the provider's reference IDs: a full audit trail for donors, recipients, and reconciliation. The app shows it as the "Payment trail" after a bulldoge.
 
 ## Security principles for when it's real
 

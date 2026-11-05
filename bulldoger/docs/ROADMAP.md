@@ -21,13 +21,13 @@ All processors, identity checks and logins are mocks. The app is safe to demo: n
 - [ ] Postgres persistence + migrations
 - [ ] Caseworker dashboard (review queue UI on top of `/api/admin/queue`)
 - [ ] Document upload + identity flow for applicants
-- [ ] Notifications (email/SMS) to recipients when listed and when bulldozed
+- [ ] Notifications (email/SMS) to recipients when listed and when bulldoged
 - [ ] Thank-you notes from recipients back to donors
 
 ## Later ideas
 
-- Partial pledges / "chip in" for big cases, with group bulldozes
+- Partial pledges / "chip in" for big cases, with group bulldoges
 - Donor filters (category, state, amount range)
-- Impact profile: total bulldozed, people helped
+- Impact profile: total bulldoged, people helped
 - Partnerships with hospitals/colleges for verified hardship referrals
 - Native iOS/Android app

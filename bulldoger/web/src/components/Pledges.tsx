@@ -7,7 +7,7 @@ const STATUS_LABEL: Record<string, string> = {
   awaiting_confirmation: "Waiting for you to confirm",
   confirmed: "Confirmed",
   disbursing: "Paying creditors…",
-  completed: "Bulldozed ✅",
+  completed: "Bulldoged ✅",
   cancelled: "Someone beat you to it",
   expired: "Hold expired",
 };
@@ -27,10 +27,10 @@ export function Pledges() {
       <div className="stat">
         <span>{formatUSD(total)}</span>
         <small>
-          bulldozed across {done.length} {done.length === 1 ? "person" : "people"}
+          bulldoged across {done.length} {done.length === 1 ? "person" : "people"}
         </small>
       </div>
-      {items.length === 0 && <p className="empty">Swipe right on a story to bulldoze your first bill.</p>}
+      {items.length === 0 && <p className="empty">Swipe right on a story to bulldoge your first bill.</p>}
       <ul className="pledge-list">
         {items.map((p) => (
           <li key={p.id}>

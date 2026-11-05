@@ -81,7 +81,7 @@ code { font-size: 0.85em; }
 .btn-round { width: 68px; height: 68px; border-radius: 50%; border: 0; font-size: 1.7rem; cursor: pointer; background: var(--surface); box-shadow: var(--shadow); transition: transform 0.12s; }
 .btn-round:active { transform: scale(0.92); }
 .btn-round.pass { color: var(--bad); }
-.btn-round.bulldoze { background: var(--yellow); width: 78px; height: 78px; display: grid; place-items: center; }
+.btn-round.bulldoge { background: var(--yellow); width: 78px; height: 78px; display: grid; place-items: center; }
 
 /* ---------- sheet */
 .sheet-backdrop { position: fixed; inset: 0; z-index: 10; background: rgba(0,0,0,0.45); display: flex; align-items: flex-end; justify-content: center; }

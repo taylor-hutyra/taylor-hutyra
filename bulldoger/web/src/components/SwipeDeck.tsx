@@ -10,7 +10,7 @@ type Sheet =
   | { kind: "paying"; card: PublicCard; pledge: Pledge }
   | { kind: "done"; card: PublicCard; pledge: Pledge };
 
-export function SwipeDeck({ onBulldozed }: { onBulldozed: () => void }) {
+export function SwipeDeck({ onBulldoged }: { onBulldoged: () => void }) {
   const [cards, setCards] = useState<PublicCard[] | null>(null);
   const [dx, setDx] = useState(0);
   const [leaving, setLeaving] = useState<SwipeDirection | null>(null);
@@ -64,7 +64,7 @@ export function SwipeDeck({ onBulldozed }: { onBulldozed: () => void }) {
       window.setTimeout(async () => {
         const done = await api.settle(paying.id);
         setSheet({ kind: "done", card: sheet.card, pledge: done });
-        onBulldozed();
+        onBulldoged();
       }, 1600);
     } catch (e) {
       setError((e as Error).message);
@@ -124,7 +124,7 @@ export function SwipeDeck({ onBulldozed }: { onBulldozed: () => void }) {
                 {isTop && (
                   <>
                     <span className="stamp stamp-right" style={{ opacity: Math.max(0, dx / THRESHOLD) }}>
-                      BULLDOZE
+                      BULLDOGE
                     </span>
                     <span className="stamp stamp-left" style={{ opacity: Math.max(0, -dx / THRESHOLD) }}>
                       PASS
@@ -142,7 +142,7 @@ export function SwipeDeck({ onBulldozed }: { onBulldozed: () => void }) {
           <button className="btn-round pass" onClick={() => void commit("left")} aria-label={`Pass on ${top.firstName}`}>
             ✕
           </button>
-          <button className="btn-round bulldoze" onClick={() => void commit("right")} aria-label={`Bulldoze ${top.firstName}'s bills`}>
+          <button className="btn-round bulldoge" onClick={() => void commit("right")} aria-label={`Bulldoge ${top.firstName}'s bills`}>
             <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" width={54} height={54} />
           </button>
         </div>
@@ -174,7 +174,7 @@ function PledgeSheet({ sheet, onConfirm, onClose }: { sheet: Sheet; onConfirm: (
       <div className="sheet">
         {sheet.kind === "confirm" && (
           <>
-            <h2>Bulldoze {card.firstName}'s bills?</h2>
+            <h2>Bulldoge {card.firstName}'s bills?</h2>
             <p className="muted">
               Your money goes <strong>straight to the creditors</strong> below, never as cash. {card.firstName} gets a
               notification when each one is paid.
@@ -215,7 +215,7 @@ function PledgeSheet({ sheet, onConfirm, onClose }: { sheet: Sheet; onConfirm: (
         {sheet.kind === "paying" && (
           <div className="center">
             <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" width={120} className="rumble" />
-            <h2>Bulldozing…</h2>
+            <h2>Bulldoging…</h2>
             <p className="muted">Sending {pledge.disbursements.length} payment(s) directly to creditors.</p>
           </div>
         )}
@@ -224,7 +224,7 @@ function PledgeSheet({ sheet, onConfirm, onClose }: { sheet: Sheet; onConfirm: (
             <div className="confetti" aria-hidden>
               🎉
             </div>
-            <h2>Bulldozed!</h2>
+            <h2>Bulldoged!</h2>
             <p>
               {formatUSD(pledge.amountCents)} of {card.firstName}'s bills are paid off.
             </p>

@@ -129,7 +129,7 @@ export class BulldogerEngine {
   }
 
   /**
-   * Donor confirms a pledge. v1 is "bulldoze it all": the donor covers the
+   * Donor confirms a pledge. v1 is "bulldoge it all": the donor covers the
    * full verified balance, and every debt is paid directly to its creditor.
    */
   async confirmPledge(pledgeId: string, donorId: string, message?: string): Promise<Pledge> {
@@ -144,7 +144,7 @@ export class BulldogerEngine {
     const c = this.getCase(p.caseId);
     if (c.status !== "listed") {
       p.status = "cancelled";
-      throw new EngineError("conflict", "Another donor already bulldozed this one. 🐶");
+      throw new EngineError("conflict", "Another donor already bulldoged this one. 🐶");
     }
 
     // Lock the case while we line up the money.
@@ -238,7 +238,7 @@ export class BulldogerEngine {
     p.ledger.push({ at: this.iso(), event: "creditor_confirmed", debtId: d.debtId, amountCents: d.amountCents, ref: d.externalRef });
     if (p.disbursements.every((x) => x.status === "confirmed_by_creditor")) {
       p.status = "completed";
-      this.getCase(p.caseId).status = "bulldozed";
+      this.getCase(p.caseId).status = "bulldoged";
     }
     return p;
   }
@@ -329,12 +329,12 @@ export class BulldogerEngine {
 
   stats() {
     const all = [...this.cases.values()];
-    const bulldozed = all.filter((c) => c.status === "bulldozed");
+    const bulldoged = all.filter((c) => c.status === "bulldoged");
     return {
       listed: all.filter((c) => c.status === "listed").length,
       inReview: all.filter((c) => c.status === "in_review").length,
-      bulldozed: bulldozed.length,
-      bulldozedCents: bulldozed.reduce((s, c) => s + totalOf(c), 0),
+      bulldoged: bulldoged.length,
+      bulldogedCents: bulldoged.reduce((s, c) => s + totalOf(c), 0),
     };
   }
 
@@ -350,7 +350,7 @@ export class BulldogerEngine {
   }
 
   private recompute(c: Case): Case {
-    if (["pledged", "paying", "bulldozed", "withdrawn"].includes(c.status)) return c;
+    if (["pledged", "paying", "bulldoged", "withdrawn"].includes(c.status)) return c;
     const failed = c.checks.find((x) => x.status === "failed");
     if (failed) {
       c.status = "rejected";
