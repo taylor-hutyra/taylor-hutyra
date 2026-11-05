@@ -1,0 +1,15 @@
+{
+  "name": "bulldoger",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Bulldoger: a swipe-to-pay platform where donors bulldoze verified people's bills, paid straight to the creditor.",
+  "workspaces": ["shared", "server", "web"],
+  "scripts": {
+    "dev": "npm run dev --workspace server & npm run dev --workspace web",
+    "dev:web": "npm run dev --workspace web",
+    "dev:server": "npm run dev --workspace server",
+    "build": "npm run build --workspace web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspace shared"
+  }
+}
