@@ -1,6 +1,6 @@
 # Verification: the "middleman" layer
 
-The point of BullDOGEr is trust in both directions: donors trust the story is real and the money does what it says; recipients trust their information is handled carefully. This layer runs **separately from the swipe app**. A case is invisible to donors until all six checks pass.
+The point of Bulldoger is trust in both directions: donors trust the story is real and the money does what it says; recipients trust their information is handled carefully. This layer runs **separately from the swipe app**. A case is invisible to donors until all six checks pass.
 
 ## The six checks (`REQUIRED_CHECKS` in `shared/src/engine.ts`)
 

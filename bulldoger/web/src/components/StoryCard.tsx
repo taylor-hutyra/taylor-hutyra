@@ -1,4 +1,5 @@
 import { CATEGORY_LABELS, DEBT_TYPE_LABELS, formatUSD, type PublicCard } from "@bulldoger/shared";
+import { Doge } from "./Doge.tsx";
 
 const GRADIENTS: Record<string, string> = {
   student: "linear-gradient(135deg,#6a8dff,#9b6bff)",
@@ -38,7 +39,9 @@ export function StoryCard({ card }: { card: PublicCard }) {
         </div>
         <div className="story-total">
           <span>{formatUSD(card.totalCents)}</span>
-          <small>to bullDOGE</small>
+          <small>
+            to <Doge>bulldoge</Doge>
+          </small>
         </div>
       </div>
       <div className="story-body">

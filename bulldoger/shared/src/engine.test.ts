@@ -55,7 +55,7 @@ describe("swipe → pledge → creditor-direct payment", () => {
     expect(e.feed("donor_demo").map((c) => c.id)).not.toContain(first.id);
   });
 
-  it("right swipe → confirm pays every creditor directly, then bullDOGEs the case", async () => {
+  it("right swipe → confirm pays every creditor directly, then bulldoges the case", async () => {
     const e = createDemoEngine();
     const { pledge } = e.swipe("donor_demo", "case_denise", "right");
     expect(pledge?.status).toBe("awaiting_confirmation");

@@ -18,7 +18,7 @@
 ## Case lifecycle
 
 ```
-submitted → in_review → listed → pledged → paying → bullDOGEd
+submitted → in_review → listed → pledged → paying → bulldoged
                 │                                   
                 └──────→ rejected        (any check failed)
 ```

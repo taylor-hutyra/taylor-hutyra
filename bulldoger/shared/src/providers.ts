@@ -30,7 +30,7 @@ export type AuthorizationResult =
 /**
  * Where the donor's money comes from. Real version: Stripe / Plaid / bank
  * wire, with the donor's payment details tokenized by the processor so
- * BullDOGEr never stores card or bank numbers.
+ * Bulldoger never stores card or bank numbers.
  *
  * Authorize → (verify every payee) → capture. If anything fails before
  * capture, the hold is voided and the donor is never charged.

@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { formatUSD } from "@bulldoger/shared";
 import { api, type PledgeWithCard } from "../api.ts";
 import { Avatar } from "./StoryCard.tsx";
+import { Doge } from "./Doge.tsx";
 
 const STATUS_LABEL: Record<string, string> = {
   awaiting_confirmation: "Waiting for you to confirm",
   confirmed: "Confirmed",
   disbursing: "Paying creditors…",
-  completed: "BullDOGEd ✅",
+  completed: "Bulldoged ✅",
   cancelled: "Someone beat you to it",
   expired: "Hold expired",
 };
@@ -27,10 +28,10 @@ export function Pledges() {
       <div className="stat">
         <span>{formatUSD(total)}</span>
         <small>
-          bullDOGEd across {done.length} {done.length === 1 ? "person" : "people"}
+          <Doge>bulldoged</Doge> across {done.length} {done.length === 1 ? "person" : "people"}
         </small>
       </div>
-      {items.length === 0 && <p className="empty">Swipe right on a story to bullDOGE your first bill.</p>}
+      {items.length === 0 && <p className="empty">Swipe right on a story to <Doge>bulldoge</Doge> your first bill.</p>}
       <ul className="pledge-list">
         {items.map((p) => (
           <li key={p.id}>
@@ -38,7 +39,7 @@ export function Pledges() {
             <div>
               <strong>{p.card.firstName}</strong>
               <small>{p.card.headline}</small>
-              <small className={`status status-${p.status}`}>{STATUS_LABEL[p.status]}</small>
+              <small className={`status status-${p.status}`}><Doge>{STATUS_LABEL[p.status] ?? p.status}</Doge></small>
             </div>
             <b>{formatUSD(p.amountCents)}</b>
           </li>

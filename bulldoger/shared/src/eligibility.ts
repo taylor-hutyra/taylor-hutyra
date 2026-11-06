@@ -1,6 +1,6 @@
 import type { ApplicationInput, DebtType, StoryCategory } from "./types.ts";
 
-/** Debt types BullDOGEr will never list. These are rejected at intake. */
+/** Debt types Bulldoger will never list. These are rejected at intake. */
 export const INELIGIBLE_DEBT_TYPES: ReadonlySet<DebtType> = new Set<DebtType>([
   "gambling",
   "payday_loan_rollover",
@@ -71,7 +71,7 @@ export function screenApplication(input: ApplicationInput): EligibilityResult {
 
   for (const d of input.debts) {
     if (INELIGIBLE_DEBT_TYPES.has(d.type)) {
-      reasons.push(`${DEBT_TYPE_LABELS[d.type]} is not eligible for BullDOGEr.`);
+      reasons.push(`${DEBT_TYPE_LABELS[d.type]} is not eligible for Bulldoger.`);
     }
     if (!(d.amountCents >= MIN_DEBT_CENTS)) {
       reasons.push(`Bills under $${MIN_DEBT_CENTS / 100} aren't eligible (${d.creditorName || "unnamed bill"}).`);

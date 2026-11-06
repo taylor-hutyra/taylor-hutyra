@@ -14,20 +14,20 @@ All processors, identity checks and logins are mocks. The app is safe to demo: n
 - [ ] **Donor KYC/AML.** Large donors must be identified (sanctions screening, source of funds for big amounts) so the platform can't be used to launder money.
 - [ ] **Real auth** for donors, recipients, and caseworkers.
 - [ ] **Recipient privacy + consent** review: photos, stories, the right to withdraw and be forgotten.
-- [ ] **Branding/IP.** Check trademark availability for "BullDOGEr." Keep the brand original; don't use any real person's name or likeness in marketing without written permission.
+- [ ] **Branding/IP.** Check trademark availability for "Bulldoger." Keep the brand original; don't use any real person's name or likeness in marketing without written permission.
 
 ## v0.2
 
 - [ ] Postgres persistence + migrations
 - [ ] Caseworker dashboard (review queue UI on top of `/api/admin/queue`)
 - [ ] Document upload + identity flow for applicants
-- [ ] Notifications (email/SMS) to recipients when listed and when bullDOGEd
+- [ ] Notifications (email/SMS) to recipients when listed and when bulldoged
 - [ ] Thank-you notes from recipients back to donors
 
 ## Later ideas
 
-- Partial pledges / "chip in" for big cases, with group bullDOGEs
+- Partial pledges / "chip in" for big cases, with group bulldoges
 - Donor filters (category, state, amount range)
-- Impact profile: total bullDOGEd, people helped
+- Impact profile: total bulldoged, people helped
 - Partnerships with hospitals/colleges for verified hardship referrals
 - Native iOS/Android app

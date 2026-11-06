@@ -4,10 +4,11 @@ import { ApplyForm } from "./components/ApplyForm.tsx";
 import { HowItWorks } from "./components/HowItWorks.tsx";
 import { Pledges } from "./components/Pledges.tsx";
 import { SwipeDeck } from "./components/SwipeDeck.tsx";
+import { Doge } from "./components/Doge.tsx";
 
 const TABS = [
   { id: "swipe", label: "Swipe", icon: "👆" },
-  { id: "bulldoged", label: "My bullDOGEs", icon: "🐶" },
+  { id: "bulldoged", label: "My bulldoges", icon: "🐶" },
   { id: "apply", label: "Get help", icon: "📝" },
   { id: "how", label: "How it works", icon: "🛡️" },
 ] as const;
@@ -33,8 +34,12 @@ export function App() {
       <header className="topbar">
         <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" className="topbar-logo" />
         <div>
-          <h1>BullDOGEr</h1>
-          <p className="tagline">Swipe right. BullDOGE a bill.</p>
+          <h1>
+            <Doge>Bulldoger</Doge>
+          </h1>
+          <p className="tagline">
+            Swipe right. <Doge>Bulldoge</Doge> a bill.
+          </p>
         </div>
         {api.mode === "demo" && <span className="pill" title="Running in-browser with fictional sample data">Demo</span>}
       </header>
@@ -49,8 +54,12 @@ export function App() {
       <nav className="tabbar" aria-label="Sections">
         {TABS.map((t) => (
           <a key={t.id} href={`#${t.id}`} className={t.id === tab ? "active" : ""} aria-current={t.id === tab ? "page" : undefined}>
-            <span aria-hidden>{t.icon}</span>
-            {t.label}
+            <span className="tab-icon" aria-hidden>
+              {t.icon}
+            </span>
+            <span className="tab-label">
+              <Doge>{t.label}</Doge>
+            </span>
           </a>
         ))}
       </nav>

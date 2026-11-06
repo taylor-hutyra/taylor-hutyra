@@ -2,7 +2,7 @@
   "name": "bulldoger",
   "private": true,
   "version": "0.1.0",
-  "description": "BullDOGEr: a swipe-to-pay platform where donors bullDOGE verified people's bills, paid straight to the creditor.",
+  "description": "Bulldoger: a swipe-to-pay platform where donors bulldoge verified people's bills, paid straight to the creditor.",
   "workspaces": ["shared", "server", "web"],
   "scripts": {
     "dev": "npm run dev --workspace server & npm run dev --workspace web",
