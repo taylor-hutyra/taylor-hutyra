@@ -55,13 +55,12 @@ function demoApi(): Api {
 }
 
 function liveApi(base: string): Api {
-  async function call<T>(path: string, init?: RequestInit & { admin?: boolean }): Promise<T> {
+  async function call<T>(path: string, init?: RequestInit): Promise<T> {
     const res = await fetch(`${base}${path}`, {
       ...init,
       headers: {
         "content-type": "application/json",
         "x-donor-id": DONOR_ID,
-        ...(init?.admin ? { "x-admin-key": import.meta.env.VITE_ADMIN_KEY ?? "dev-admin-key" } : {}),
       },
     });
     const body = await res.json().catch(() => ({}));
@@ -77,7 +76,7 @@ function liveApi(base: string): Api {
     swipe: (caseId, direction) => call("/api/swipes", { method: "POST", body: JSON.stringify({ caseId, direction }) }),
     pledges: () => call("/api/pledges"),
     confirm: (id, message) => call(`/api/pledges/${id}/confirm`, { method: "POST", body: JSON.stringify({ message }) }),
-    settle: (id) => call(`/api/admin/pledges/${id}/settle`, { method: "POST", admin: true }),
+    settle: (id) => call(`/api/demo/pledges/${id}/settle`, { method: "POST" }),
     apply: async (input) => {
       const r = await call<{ id?: string; status?: string; ok?: false; reasons?: string[] }>("/api/applications", {
         method: "POST",
@@ -88,5 +87,6 @@ function liveApi(base: string): Api {
   };
 }
 
+// Unset → in-browser demo. "/" → same-origin API (how the Heroku build runs).
 const base = import.meta.env.VITE_API_URL as string | undefined;
 export const api: Api = base ? liveApi(base.replace(/\/$/, "")) : demoApi();

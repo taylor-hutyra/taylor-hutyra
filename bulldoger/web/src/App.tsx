@@ -41,7 +41,9 @@ export function App() {
             Swipe right. <Doge>Bulldoge</Doge> a bill.
           </p>
         </div>
-        {api.mode === "demo" && <span className="pill" title="Running in-browser with fictional sample data">Demo</span>}
+        <span className="pill" title="Fictional sample data and mocked payments: no real money moves">
+          Demo
+        </span>
       </header>
 
       <main className="content">

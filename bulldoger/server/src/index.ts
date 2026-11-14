@@ -1,3 +1,7 @@
+import { randomBytes } from "node:crypto";
+import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import cors from "cors";
 import express, { type NextFunction, type Request, type Response } from "express";
 import { createDemoEngine, EngineError, type CheckKind, type CheckStatus } from "@bulldoger/shared";
@@ -14,7 +18,13 @@ import { createDemoEngine, EngineError, type CheckKind, type CheckStatus } from 
  */
 
 const PORT = Number(process.env.PORT ?? 8787);
-const ADMIN_KEY = process.env.ADMIN_KEY ?? "dev-admin-key";
+const IS_PROD = process.env.NODE_ENV === "production";
+// In production, never fall back to the well-known dev key.
+const ADMIN_KEY = process.env.ADMIN_KEY ?? (IS_PROD ? randomBytes(24).toString("hex") : "dev-admin-key");
+// Everything is mocked, so letting a donor "settle" their own pledge is safe for the demo.
+// Turn off (DEMO_SETTLE=false) once a real payment rail sends creditor webhooks.
+const DEMO_SETTLE = process.env.DEMO_SETTLE !== "false";
+const WEB_DIST = join(dirname(fileURLToPath(import.meta.url)), "../../web/dist");
 
 const engine = createDemoEngine();
 const app = express();
@@ -103,6 +113,22 @@ app.post("/api/webhooks/rail/:pledgeId/:disbursementId", requireAdmin, (req, res
 app.post("/api/admin/pledges/:id/settle", requireAdmin, (req, res) => {
   res.json(engine.settleAll(param(req, "id")));
 });
+
+/** Demo only: simulate every creditor confirming, for the donor's own pledge. */
+app.post("/api/demo/pledges/:id/settle", (req, res) => {
+  if (!DEMO_SETTLE) throw new EngineError("forbidden", "Demo settlement is turned off.");
+  const id = param(req, "id");
+  if (!engine.pledgesFor(donorId(req)).some((p) => p.id === id)) throw new EngineError("not_found", "Pledge not found");
+  res.json(engine.settleAll(id));
+});
+
+// ------------------------------------------------------------ web app
+
+// Serve the built web app (npm run build) from the same origin as the API.
+if (existsSync(WEB_DIST)) {
+  app.use(express.static(WEB_DIST, { index: false, maxAge: "1h" }));
+  app.get(/^(?!\/api\/).*/, (_req, res) => res.sendFile(join(WEB_DIST, "index.html")));
+}
 
 // ---------------------------------------------------------------- errors
 
