@@ -1,70 +1,78 @@
 import { CATEGORY_LABELS, DEBT_TYPE_LABELS, formatUSD, type PublicCard } from "@bulldoger/shared";
+import { KeyRound, MapPin, ShieldCheck } from "lucide-react";
+import { CATEGORY_ICONS, DEBT_ICONS, Portrait } from "../brand.tsx";
 import { Doge } from "./Doge.tsx";
 
-const GRADIENTS: Record<string, string> = {
-  student: "linear-gradient(135deg,#6a8dff,#9b6bff)",
-  single_parent: "linear-gradient(135deg,#ff8a65,#ff5f8f)",
-  housing_recovery: "linear-gradient(135deg,#3fbf8f,#2a9dbf)",
-  medical: "linear-gradient(135deg,#ff6b6b,#f5b700)",
-  veteran: "linear-gradient(135deg,#4f6d7a,#2f4858)",
-  caregiver: "linear-gradient(135deg,#c56cf0,#ff9ff3)",
-  disaster_recovery: "linear-gradient(135deg,#1e90ff,#00b894)",
-  other: "linear-gradient(135deg,#888,#555)",
-};
-
-export function Avatar({ card, size = 96 }: { card: PublicCard; size?: number }) {
-  if (card.photoUrl) {
-    return <img className="avatar" src={card.photoUrl} alt={`Photo of ${card.firstName}`} style={{ width: size, height: size }} />;
-  }
-  return (
-    <div className="avatar" style={{ width: size, height: size, background: GRADIENTS[card.category], fontSize: size * 0.42 }} aria-hidden>
-      {card.firstName[0]}
-    </div>
-  );
-}
-
 export function StoryCard({ card }: { card: PublicCard }) {
+  const CategoryIcon = CATEGORY_ICONS[card.category];
   return (
-    <article className="story-card">
-      <div className="story-hero" style={{ background: GRADIENTS[card.category] }}>
-        <Avatar card={card} size={84} />
-        <div className="story-hero-text">
+    <article className="story-card" aria-label={`${card.firstName}'s story`}>
+      <header className="story-head">
+        <Portrait card={card} size={56} />
+        <div className="story-who">
           <h2>
             {card.firstName}
-            {card.age ? <span className="age">, {card.age}</span> : null}
+            {card.age ? <span className="story-age">, {card.age}</span> : null}
           </h2>
           <p>
-            {card.city}, {card.state} · {CATEGORY_LABELS[card.category]}
+            <MapPin size={14} aria-hidden /> {card.city}, {card.state}
           </p>
         </div>
-        <div className="story-total">
-          <span>{formatUSD(card.totalCents)}</span>
-          <small>
-            to <Doge>bulldoge</Doge>
-          </small>
+        <span className={`chip tone-${card.category}`}>
+          <CategoryIcon size={14} aria-hidden />
+          {CATEGORY_LABELS[card.category]}
+        </span>
+      </header>
+
+      <div className="story-amount">
+        <div>
+          <span className="eyebrow">
+            To <Doge>bulldoge</Doge>
+          </span>
+          <span className="amount">{formatUSD(card.totalCents)}</span>
         </div>
+        <span className="verified-badge">
+          <ShieldCheck size={15} aria-hidden /> Verified
+        </span>
       </div>
+
       <div className="story-body">
-        <h3>{card.headline}</h3>
+        <h3 className="story-headline">{card.headline}</h3>
         <p className="story-text">{card.story}</p>
-        <p className="unlocks">
-          <strong>This unlocks:</strong> {card.unlocks}
-        </p>
-        <ul className="debts">
-          {card.debts.map((d) => (
-            <li key={d.id}>
-              <span>
-                {DEBT_TYPE_LABELS[d.type]}
-                <small>{d.creditorName}</small>
-              </span>
-              <b>{formatUSD(d.amountCents)}</b>
-            </li>
-          ))}
+
+        <div className="unlocks">
+          <span className="unlocks-icon" aria-hidden>
+            <KeyRound size={16} />
+          </span>
+          <div>
+            <span className="eyebrow">What this unlocks</span>
+            <p>{card.unlocks}</p>
+          </div>
+        </div>
+
+        <ul className="bills" aria-label="Bills">
+          {card.debts.map((d) => {
+            const Icon = DEBT_ICONS[d.type];
+            return (
+              <li key={d.id}>
+                <span className="bill-icon" aria-hidden>
+                  <Icon size={17} />
+                </span>
+                <span className="bill-text">
+                  <b>{DEBT_TYPE_LABELS[d.type]}</b>
+                  <small>{d.creditorName}</small>
+                </span>
+                <span className="bill-amount">{formatUSD(d.amountCents)}</span>
+              </li>
+            );
+          })}
         </ul>
-        <p className="verified">
-          <span aria-hidden>✅</span> Verified: identity, bills, payoff confirmed with creditor, background screen, caseworker review
-        </p>
       </div>
+
+      <footer className="story-foot">
+        <ShieldCheck size={15} aria-hidden />
+        {card.verifiedChecks.length} of 6 checks passed · Paid directly to creditors
+      </footer>
     </article>
   );
 }

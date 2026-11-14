@@ -8,8 +8,9 @@ import { Fragment } from "react";
 export function Doge({ children }: { children: string }) {
   const parts = children.split(/(doge?)/i);
   if (parts.length === 1) return <>{children}</>;
+  // One inline wrapper, so flex parents treat the word as a single item.
   return (
-    <>
+    <span className="doge-word">
       {parts.map((part, i) =>
         /^doge?$/i.test(part) ? (
           <u key={i} className="doge">
@@ -19,6 +20,6 @@ export function Doge({ children }: { children: string }) {
           <Fragment key={i}>{part}</Fragment>
         ),
       )}
-    </>
+    </span>
   );
 }
